@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import "../styles/ChatWindow.css"
 import Chat from './Chat'
 import { MyContext } from '../context/MyContext'
 import { MoonLoader } from "react-spinners";
 
 export default function ChatWindow() {
-  const { prompt, setPrompt, reply, setReply, currThreadId } = useContext(MyContext)
+  const { prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats } = useContext(MyContext)
   const [loading, setLoading] = useState(false)
-  
+
 
   const getReply = async () => {
     setLoading(true)
@@ -32,6 +32,18 @@ export default function ChatWindow() {
     }
     setLoading(false)
   }
+
+  // Appending new chats to prevChats
+  useEffect(() => {
+    if (prompt && reply) {
+      setPrevChats(prevChats => [
+        ...prevChats,
+        { role: "user", content: prompt },
+        { role: "assistant", content: reply }
+      ])
+      setPrompt("")
+    }
+  }, [reply])
 
   return (
     <div className='chatWindow'>
