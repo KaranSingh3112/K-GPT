@@ -25,10 +25,3 @@ const connectDB = async() => {
     console.log("Failed to connect with database",err);
   }
 }
-
-// app.post("/test", async (req, res) => {
-  
-
-  
-// })
-// jjWyEyZV26NzKKJU
