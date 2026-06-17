@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from 'react'
 import "../styles/ChatWindow.css"
 import Chat from './Chat'
 import { MyContext } from '../context/MyContext'
-import { MoonLoader } from "react-spinners";
+import { ScaleLoader } from "react-spinners";
+import "highlight.js/styles/github-dark.css";
 
 export default function ChatWindow() {
   const { prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats } = useContext(MyContext)
@@ -56,9 +57,9 @@ export default function ChatWindow() {
 
       <Chat />
 
-      <MoonLoader color='#fff' loading={loading}>
+      <ScaleLoader color='#fff' loading={loading}>
 
-      </MoonLoader>
+      </ScaleLoader>
 
       <div className="chatInput">
         <div className="inputBox">
