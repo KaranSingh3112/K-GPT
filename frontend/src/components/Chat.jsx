@@ -8,18 +8,18 @@ export default function Chat() {
   const { newChat, prevChats, reply } = useContext(MyContext);
   const [latestReply, setLatestReply] = useState(null);
 
-  useEffect(()=>{
-    if(!prevChats?.length) return;
+  useEffect(() => {
+    if (!prevChats?.length) return;
     const content = reply.split(" ");
     let idx = 0;
-    const interval = setInterval(()=>{
-      setLatestReply(content.slice(0, idx+1).join(" "));
+    const interval = setInterval(() => {
+      setLatestReply(content.slice(0, idx + 1).join(" "));
       idx++;
-      if(idx >= content.length) clearInterval();
+      if (idx >= content.length) clearInterval();
     }, 40);
 
     return () => clearInterval(interval);
-  },[prevChats,reply])
+  }, [prevChats, reply])
 
   return (
     <>
@@ -31,9 +31,9 @@ export default function Chat() {
             <div className={chat.role === 'user' ? "userDiv" : "gptDiv"} key={idx}>
               {
                 chat.role === 'user' ?
-                <p className='userMessage'>{chat.content}</p>
-                :
-                <ReactMarkdown rehypePlugins={[rehypeHighlight]} >{chat.content}</ReactMarkdown>
+                  <p className='userMessage'>{chat.content}</p>
+                  :
+                  <ReactMarkdown rehypePlugins={[rehypeHighlight]} >{chat.content}</ReactMarkdown>
               }
             </div>
           ))

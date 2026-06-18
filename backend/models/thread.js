@@ -31,7 +31,7 @@ const ThreadSchema = new Schema({
         type: String,
         default: Date.now
     },
-    upodatedAt: {
+    updatedAt: {
         type: String,
         default: Date.now
     }
