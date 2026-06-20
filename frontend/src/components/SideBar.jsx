@@ -1,17 +1,17 @@
 import React, { useContext, useEffect } from 'react'
 import "../styles/SideBar.css"
 import { MyContext } from '../context/MyContext'
-import { v1 as uuidv1} from "uuid";
+import { v1 as uuidv1 } from "uuid";
 
 export default function SideBar() {
 
-  const {allThreads, setAllThreads, currThreadId, newChat, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
+  const { allThreads, setAllThreads, currThreadId, newChat, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
 
-  const getAllThreads = async() => {
+  const getAllThreads = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/thread");
       const res = await response.json();
-      const filteredData = res.map(thread => ({threadId: thread.threadId, title: thread.title}))
+      const filteredData = res.map(thread => ({ threadId: thread.threadId, title: thread.title }))
       setAllThreads(filteredData)
     } catch (error) {
       console.log(error);
@@ -20,7 +20,7 @@ export default function SideBar() {
 
   useEffect(() => {
     getAllThreads();
-  },[currThreadId])
+  }, [currThreadId])
 
   const createNewChat = () => {
     setNewChat(true)
@@ -30,7 +30,7 @@ export default function SideBar() {
     setPrevChats([]);
   }
 
-  const changeThread = async(newThreadId) => {
+  const changeThread = async (newThreadId) => {
     setCurrThreadId(newThreadId);
     try {
       const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
@@ -41,8 +41,23 @@ export default function SideBar() {
       setReply(null)
 
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
+
+    }
+  }
+
+  const deleteThread = async (threadId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/thread/${threadId}`,{method: "DELETE"})
+      const res = await response.json();
+      console.log(res);
+      //Updating threads re-render 
+      setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId))
+      if(threadId === currThreadId){
+        createNewChat();
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -57,8 +72,16 @@ export default function SideBar() {
       {/* history */}
       <ul className='history'>
         {
-          allThreads?.map((thread, idx)=>(
-            <li key={idx} onClick={(e)=>{changeThread(thread.threadId)}}>{thread.title}</li>
+          allThreads?.map((thread, idx) => (
+            <li key={idx} onClick={(e) => { changeThread(thread.threadId) }}>
+              {thread.title}
+              <i className="fa-solid fa-trash" onClick={(e) => {
+                e.stopPropagation(); //stop event bubbling
+                deleteThread(thread.threadId)
+              }}
+              >
+              </i>
+            </li>
           ))
         }
       </ul>
