@@ -9,6 +9,10 @@ export default function Chat() {
   const [latestReply, setLatestReply] = useState(null);
 
   useEffect(() => {
+    if (reply === null) {
+      setLatestReply(null)
+      return;
+    }
     if (!prevChats?.length) return;
     const content = reply.split(" ");
     let idx = 0;
@@ -40,10 +44,17 @@ export default function Chat() {
         }
 
         {
-          prevChats.length > 0 && latestReply !== null &&
-          <div className='gptDiv' key={"typing"}>
-            <ReactMarkdown rehypePlugins={[rehypeHighlight]} >{latestReply}</ReactMarkdown>
-          </div>
+          prevChats.length > 0 && (
+              latestReply === null ? (
+              <div className='gptDiv' key={"non-typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]} >{prevChats[prevChats.length - 1].content}</ReactMarkdown>
+              </div>
+              ) : (
+              <div className='gptDiv' key={"typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]} >{latestReply}</ReactMarkdown>
+              </div>
+              )
+          )
         }
       </div>
     </>

@@ -12,7 +12,6 @@ export default function SideBar() {
       const response = await fetch("http://localhost:8080/api/thread");
       const res = await response.json();
       const filteredData = res.map(thread => ({threadId: thread.threadId, title: thread.title}))
-      console.log(filteredData);
       setAllThreads(filteredData)
     } catch (error) {
       console.log(error);
@@ -31,6 +30,22 @@ export default function SideBar() {
     setPrevChats([]);
   }
 
+  const changeThread = async(newThreadId) => {
+    setCurrThreadId(newThreadId);
+    try {
+      const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
+      const res = await response.json();
+      console.log(res);
+      setPrevChats(res);
+      setNewChat(false);
+      setReply(null)
+
+    } catch (error) {
+        console.log(error);
+        
+    }
+  }
+
   return (
     <section className='sidebar'>
       {/* New chat button */}
@@ -42,8 +57,8 @@ export default function SideBar() {
       {/* history */}
       <ul className='history'>
         {
-          allThreads?.map((thread)=>(
-            <li>{thread.title}</li>
+          allThreads?.map((thread, idx)=>(
+            <li key={idx} onClick={(e)=>{changeThread(thread.threadId)}}>{thread.title}</li>
           ))
         }
       </ul>
