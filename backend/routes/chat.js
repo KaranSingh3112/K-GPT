@@ -1,19 +1,17 @@
 import express from "express";
 import { Router } from "express";
-import { chat, deleteThread, getSingleThread, getThread, test } from "../controller/chat.js";
+import { chat, deleteThread, getSingleThread, getThread } from "../controller/chat.js";
+import { verifyToken } from "../middleware/authMiddleWare.js";
 
- 
 const router = express.Router()
 
-router.post("/test", test)
+router.get("/thread", verifyToken, getThread)
 
-router.get("/thread", getThread)
-
-router.post("/chat", chat)
+router.post("/chat", verifyToken, chat)
 
 router.route("/thread/:threadId")
-    .get(getSingleThread)
-    .delete(deleteThread)
+    .get(verifyToken, getSingleThread)
+    .delete(verifyToken, deleteThread)
 
 
 export default router;

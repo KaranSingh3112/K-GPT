@@ -1,21 +1,6 @@
 import Thread from "../models/thread.js";
 import getGrokAiResponse from "../utils/grokai.js";
 
-export const test = async(req,res) => {
-    try {
-        const thread = new Thread({
-            threadId: "abcd1234679191",
-            title: "testing done code",
-        })
-        let result = await thread.save();
-        res.send(result);
-        
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({error: "Failed to save in DB"})
-    }
-}
-
 //get all threads
 export const getThread = async(req,res) => {
     try {
