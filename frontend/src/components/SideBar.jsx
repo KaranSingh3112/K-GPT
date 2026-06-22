@@ -8,9 +8,19 @@ export default function SideBar() {
   const { allThreads, setAllThreads, currThreadId, newChat, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
 
   const getAllThreads = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAllThreads([]);
+      return;
+    }
     try {
-      const response = await fetch("http://localhost:8080/api/thread");
+      const response = await fetch("http://localhost:8080/api/thread", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const res = await response.json();
+      if (!Array.isArray(res)) return;
       const filteredData = res.map(thread => ({ threadId: thread.threadId, title: thread.title }))
       setAllThreads(filteredData)
     } catch (error) {
@@ -32,8 +42,16 @@ export default function SideBar() {
 
   const changeThread = async (newThreadId) => {
     setCurrThreadId(newThreadId);
+    const token = localStorage.getItem('token')
+    if (!token) {
+      return;
+    }
     try {
-      const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
+      const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       const res = await response.json();
       console.log(res);
       setPrevChats(res);
@@ -47,8 +65,17 @@ export default function SideBar() {
   }
 
   const deleteThread = async (threadId) => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      return;
+    }
     try {
-      const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, { method: "DELETE" })
+      const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       const res = await response.json();
       console.log(res);
       //Updating threads re-render 

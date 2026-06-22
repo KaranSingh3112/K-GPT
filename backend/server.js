@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api", chatRoute)
-app.use("/", authRoute)
+app.use("/api", authRoute)
 
 app.listen(8080, () => {
   console.log("App listens on port 8080");

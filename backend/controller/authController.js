@@ -33,7 +33,7 @@ export const login = async(req,res) =>{
             return res.status(404).json({message: "User not found!"});
         }
 
-        const isMatch = await bcrypt.compare(password, hashedPassword);
+        const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch){
             return res.status(400).json({message: "Invalid credentials!"})
         }
@@ -51,12 +51,12 @@ export const login = async(req,res) =>{
         res.status(200).json({
             token,
             user: {
-                id: user_id,
+                id: user._id,
                 username: user.username,
                 email: user.email
             }
         });
     } catch (error) {
-        res.status(500).json({message: error})
+        res.status(500).json({message: error.message})
     }
 }
