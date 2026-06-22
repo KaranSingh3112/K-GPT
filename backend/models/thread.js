@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import User from "./user.js"
 
 const messageSchema = new Schema({
     content: {
@@ -13,10 +14,15 @@ const messageSchema = new Schema({
     timestamp: {
         type: Date,
         default: Date.now()
-    }
+    },
 });
 
 const ThreadSchema = new Schema({
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     threadId: {
         type: String,
         required: true,
@@ -28,11 +34,11 @@ const ThreadSchema = new Schema({
     },
     messages: [messageSchema],
     createdAt: {
-        type: String,
+        type: Date,
         default: Date.now
     },
     updatedAt: {
-        type: String,
+        type: Date,
         default: Date.now
     }
 })

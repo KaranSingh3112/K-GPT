@@ -83,7 +83,7 @@ export default function ChatWindow() {
                   setPrevChats([]);
                   setReply(null);
                   setPrompt("");
-                  setCurrThreadId(uuidv1());
+                  setCurrThreadId();
                   setNewChat(true);
                   navigate("/")
                 }}

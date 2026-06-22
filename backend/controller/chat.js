@@ -4,7 +4,7 @@ import getGrokAiResponse from "../utils/grokai.js";
 //get all threads
 export const getThread = async(req,res) => {
     try {
-        const threads = await Thread.find({}).sort({updatedAt: -1})
+        const threads = await Thread.find({userId: req.user.id}).sort({updatedAt: -1})
         res.json(threads)
     } catch (err) {
         console.log("Something went wrong",err);
@@ -16,7 +16,7 @@ export const getThread = async(req,res) => {
 export const getSingleThread = async(req,res) => {
     let {threadId} = req.params;
     try {
-        const thread = await Thread.findOne({threadId});
+        const thread = await Thread.findOne({threadId, userId: req.user.id});
         if(!thread){
             res.status(404).json({error: "Thread not found"})
         }
@@ -32,7 +32,7 @@ export const getSingleThread = async(req,res) => {
 export const deleteThread = async(req,res) => {
     const {threadId} = req.params;
     try {
-        const deletedThread = await Thread.findOneAndDelete({threadId});
+        const deletedThread = await Thread.findOneAndDelete({threadId, userId: req.user.id});
         if(!deletedThread){
             res.status(404).json({error: "Thread not found"})
         }
@@ -46,15 +46,17 @@ export const deleteThread = async(req,res) => {
 
 //For doing chat with AI
 export const chat = async(req,res) => {
+    const userId = req.user.id;
     const {threadId, message} = req.body;
     if(!threadId || !message){
         res.status(400).json({error: "Missing requires fields"})
     }
     try {
-        let thread = await Thread.findOne({threadId})
+        let thread = await Thread.findOne({threadId, userId})
         if(!thread){
             //Creating new thread
             thread = new Thread({
+                userId,
                 threadId,
                 title: message,
                 messages: [{role: "user", content: message}]
