@@ -2,10 +2,13 @@ import React, { useContext, useEffect } from 'react'
 import "../styles/SideBar.css"
 import { MyContext } from '../context/MyContext'
 import { v1 as uuidv1 } from "uuid";
+import API from '../api/axios';
+import toast from "react-hot-toast";
+import logo from "../assets/blacklogo.png";
 
 export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
 
-  const { allThreads, setAllThreads, currThreadId, newChat, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
+  const { allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
 
   const getAllThreads = async () => {
     const token = localStorage.getItem('token');
@@ -14,17 +17,14 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
       return;
     }
     try {
-      const response = await fetch("http://localhost:8080/api/thread", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const res = await response.json();
-      if (!Array.isArray(res)) return;
-      const filteredData = res.map(thread => ({ threadId: thread.threadId, title: thread.title }))
-      setAllThreads(filteredData)
+      const { data } = await API.get("/thread")
+      setAllThreads(Array.isArray(data) ? data : []);
     } catch (error) {
       console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+        "Something went wrong"
+      )
     }
   }
 
@@ -42,42 +42,24 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
 
   const changeThread = async (newThreadId) => {
     setCurrThreadId(newThreadId);
-    const token = localStorage.getItem('token')
-    if (!token) {
-      return;
-    }
     try {
-      const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const res = await response.json();
-      console.log(res);
-      setPrevChats(res);
+      const { data } = await API.get(`/thread/${newThreadId}`)
+      setPrevChats(data)
       setNewChat(false);
       setReply(null)
 
     } catch (error) {
       console.log(error);
-
+      toast.error(
+        error.response?.data?.message ||
+        "Something went wrong"
+      )
     }
   }
 
   const deleteThread = async (threadId) => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      return;
-    }
     try {
-      const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      const res = await response.json();
-      console.log(res);
+      await API.delete(`/thread/${threadId}`)
       //Updating threads re-render 
       setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId))
       if (threadId === currThreadId) {
@@ -85,6 +67,10 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
       }
     } catch (error) {
       console.log(error);
+      toast.error(
+        error.response?.data?.message ||
+        "Something went wrong"
+      )
     }
   }
 
@@ -99,7 +85,7 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
       }
       {/* New chat button */}
       <button onClick={createNewChat}>
-        <img src="../src/assets/blacklogo.png" className='logo' alt="K-GPT" />
+        <img src={logo} className='logo' alt="K-GPT" />
         <span className="fa-regular fa-pen-to-square"></span>
       </button>
 
