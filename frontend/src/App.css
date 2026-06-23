@@ -12,3 +12,13 @@ body{
     background-color: #212121;
     display: flex;
 }
+
+.app{
+    display:flex;
+}
+
+@media(max-width:768px){
+    .app{
+        display:block;
+    }
+}

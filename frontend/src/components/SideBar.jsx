@@ -3,7 +3,7 @@ import "../styles/SideBar.css"
 import { MyContext } from '../context/MyContext'
 import { v1 as uuidv1 } from "uuid";
 
-export default function SideBar() {
+export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
 
   const { allThreads, setAllThreads, currThreadId, newChat, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
 
@@ -89,7 +89,14 @@ export default function SideBar() {
   }
 
   return (
-    <section className='sidebar'>
+    <section className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+      {
+        isSidebarOpen &&
+        <div
+          className="overlay"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      }
       {/* New chat button */}
       <button onClick={createNewChat}>
         <img src="../src/assets/blacklogo.png" className='logo' alt="K-GPT" />

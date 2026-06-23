@@ -120,3 +120,24 @@ input:focus{
     background-color: rgba(180, 180, 180, 0.1);
     border-radius: 6px;
 }
+
+.hamburger{
+    display:none;
+    cursor:pointer;
+    font-size:1.5rem;
+}
+
+.chatWindow{
+    width: calc(100% - 300px);
+    margin-left: 300px;
+}
+
+@media (max-width:768px){
+    .hamburger{
+        display:block;
+    }
+    .chatWindow{
+        width:100%;
+        margin-left:0;
+    }
+}

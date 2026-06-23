@@ -5,11 +5,12 @@ import { MyContext } from '../context/MyContext'
 import { ScaleLoader } from "react-spinners";
 import "highlight.js/styles/github-dark.css";
 import { useNavigate } from 'react-router-dom';
+import { v1 as uuidv1 } from "uuid";
 
-export default function ChatWindow() {
+export default function ChatWindow({isSidebarOpen,setIsSidebarOpen}) {
   const { prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, setNewChat, setAllThreads, setCurrThreadId } = useContext(MyContext)
   const [loading, setLoading] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
   const navigate = useNavigate();
 
@@ -58,9 +59,22 @@ export default function ChatWindow() {
     }
   }, [reply])
 
+  const resetChatState = () => {
+    setAllThreads([]);
+    setPrevChats([]);
+    setReply(null);
+    setPrompt("");
+    setCurrThreadId(uuidv1());
+    setNewChat(true);
+  };
+
   return (
     <div className='chatWindow'>
       <div className="navbar">
+        <i
+          className="fa-solid fa-bars hamburger"
+          onClick={() => setIsSidebarOpen(prev => !prev)}
+        ></i>
         <span>K-GPT <i className="fa-solid fa-angle-down"></i></span>
         <div className="userIconDiv" onClick={() => setIsOpen(!isOpen)}>
           <span className='userIcon'><i className="fa-solid fa-user"></i></span>
@@ -79,12 +93,7 @@ export default function ChatWindow() {
                 onClick={() => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("user");
-                  setAllThreads([]);
-                  setPrevChats([]);
-                  setReply(null);
-                  setPrompt("");
-                  setCurrThreadId();
-                  setNewChat(true);
+                  resetChatState();
                   navigate("/")
                 }}
               >
