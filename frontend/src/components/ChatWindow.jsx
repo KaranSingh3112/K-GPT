@@ -4,9 +4,10 @@ import Chat from './Chat'
 import { MyContext } from '../context/MyContext'
 import { ScaleLoader } from "react-spinners";
 import "highlight.js/styles/github-dark.css";
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 import { v1 as uuidv1 } from "uuid";
 import toast from "react-hot-toast";
+import API from '../api/axios';
 
 export default function ChatWindow({isSidebarOpen,setIsSidebarOpen}) {
   const { prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, setNewChat, setAllThreads, setCurrThreadId } = useContext(MyContext)
@@ -22,26 +23,14 @@ export default function ChatWindow({isSidebarOpen,setIsSidebarOpen}) {
       navigate("/login")
       return;
     }
-
     setLoading(true)
     setNewChat(false)
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        message: prompt,
-        threadId: currThreadId,
-      })
-    };
-
     try {
-      const response = await fetch("http://localhost:8080/api/chat", options)
-      const res = await response.json()
-      console.log(res);
-      setReply(res.reply)
+      const { data } = await API.post("/chat", {
+        message: prompt,
+        threadId: currThreadId
+      })
+      setReply(data.reply)
     } catch (error) {
       console.log(error)
     }

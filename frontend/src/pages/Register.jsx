@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import toast from "react-hot-toast";
+import API from "../api/axios";
 
 export default function Register() {
     const [username, setUsername] = useState("");
@@ -23,31 +24,19 @@ export default function Register() {
 
         setLoading(true);
         try {
-            const response = await fetch(
-                "http://localhost:8080/api/register",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username,
-                        email,
-                        password
-                    })
-                }
-            );
-
-            const data = await response.json();
-            if (response.ok) {
-                toast.success("Registration successful! Please log in.");
-                navigate("/login");
-            } else {
-                toast.error(data.message || "Registration failed");
-            }
+            const { data } = API.post("/register", {
+                username,
+                email,
+                password
+            })
+            toast.success("Registeration successful");
+            navigate("/login");
         } catch (error) {
             console.log(error);
-            toast.error("An error occurred during registration");
+            toast.error(
+                error.response?.data?.message ||
+                "Registration failed"
+            );
         } finally {
             setLoading(false);
         }
