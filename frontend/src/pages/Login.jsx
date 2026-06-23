@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import toast from "react-hot-toast";
-import API from "../api/axios";
 
 export default function Login() {
 
@@ -16,21 +15,34 @@ export default function Login() {
             toast.error("Please fill in all fields");
             return;
         }
+
         setLoading(true);
         try {
-            const { data } = await API.post("/login", {
-                email,
-                password
-            })
-            localStorage.setItem('token', data.token)
-            toast.success("Login Successful")
-            navigate("/")
+            const response = await fetch(
+                "http://localhost:8080/api/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                }
+            );
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem("token", data.token);
+                toast.success("Login successful");
+                navigate("/");
+            } else {
+                toast.error(data.message || "Login failed");
+            }
         } catch (error) {
             console.log(error);
-            toast.error(
-                error.response?.data?.message ||
-                "Login failed"
-            );
+            toast.error("An error occurred during login");
         } finally {
             setLoading(false);
         }
