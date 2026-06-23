@@ -91,30 +91,30 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
         </button>
 
         {/* history */}
-
-        {
-          allThreads.length > 0 ?
-            allThreads?.map((thread, idx) => (
-              <li key={idx}
-                onClick={(e) => { changeThread(thread.threadId) }}
-                className={thread.threadId === currThreadId ? "highlighted" : ""}
-              >
-                {thread.title}
-                <i className="fa-solid fa-trash" onClick={(e) => {
-                  e.stopPropagation(); //stop event bubbling
-                  deleteThread(thread.threadId)
-                }}
+        <ul className='history'>
+          {
+            allThreads.length > 0 ?
+              allThreads?.map((thread, idx) => (
+                <li key={idx}
+                  onClick={(e) => { changeThread(thread.threadId) }}
+                  className={thread.threadId === currThreadId ? "highlighted" : ""}
                 >
-                </i>
-              </li>
-            ))
-            :
-            <div className="no-history">
-              <i className="fa-regular fa-clock"></i>
-              <p>No History Yet</p>
-            </div>
-        }
-
+                  {thread.title}
+                  <i className="fa-solid fa-trash" onClick={(e) => {
+                    e.stopPropagation(); //stop event bubbling
+                    deleteThread(thread.threadId)
+                  }}
+                  >
+                  </i>
+                </li>
+              ))
+              :
+              <div className="no-history">
+                <i className="fa-regular fa-clock"></i>
+                <p>No History Yet</p>
+              </div>
+          }
+        </ul>
         {/* Sign */}
         <div className='sign'>
           <p> By Karan Singh &hearts; </p>
