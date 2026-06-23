@@ -30,7 +30,7 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
 
   useEffect(() => {
     getAllThreads();
-  }, [currThreadId])
+  }, [])
 
   const createNewChat = () => {
     setNewChat(true)
@@ -75,7 +75,7 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
   }
 
   return (
-    <section className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+    <>
       {
         isSidebarOpen &&
         <div
@@ -83,36 +83,43 @@ export default function SideBar({ isSidebarOpen, setIsSidebarOpen }) {
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       }
-      {/* New chat button */}
-      <button onClick={createNewChat}>
-        <img src={logo} className='logo' alt="K-GPT" />
-        <span className="fa-regular fa-pen-to-square"></span>
-      </button>
+      <section className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+        {/* New chat button */}
+        <button onClick={createNewChat}>
+          <img src={logo} className='logo' alt="K-GPT" />
+          <span className="fa-regular fa-pen-to-square"></span>
+        </button>
 
-      {/* history */}
-      <ul className='history'>
+        {/* history */}
+
         {
-          allThreads?.map((thread, idx) => (
-            <li key={idx}
-              onClick={(e) => { changeThread(thread.threadId) }}
-              className={thread.threadId === currThreadId ? "highlighted" : ""}
-            >
-              {thread.title}
-              <i className="fa-solid fa-trash" onClick={(e) => {
-                e.stopPropagation(); //stop event bubbling
-                deleteThread(thread.threadId)
-              }}
+          allThreads.length > 0 ?
+            allThreads?.map((thread, idx) => (
+              <li key={idx}
+                onClick={(e) => { changeThread(thread.threadId) }}
+                className={thread.threadId === currThreadId ? "highlighted" : ""}
               >
-              </i>
-            </li>
-          ))
+                {thread.title}
+                <i className="fa-solid fa-trash" onClick={(e) => {
+                  e.stopPropagation(); //stop event bubbling
+                  deleteThread(thread.threadId)
+                }}
+                >
+                </i>
+              </li>
+            ))
+            :
+            <div className="no-history">
+              <i className="fa-regular fa-clock"></i>
+              <p>No History Yet</p>
+            </div>
         }
-      </ul>
 
-      {/* Sign */}
-      <div className='sign'>
-        <p> By Karan Singh &hearts; </p>
-      </div>
-    </section>
+        {/* Sign */}
+        <div className='sign'>
+          <p> By Karan Singh &hearts; </p>
+        </div>
+      </section>
+    </>
   )
 }
