@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+import toast from "react-hot-toast";
 
 export default function Login() {
 
@@ -11,7 +12,7 @@ export default function Login() {
 
     async function handleLogin() {
         if (!email || !password) {
-            alert("Please fill in all fields");
+            toast.error("Please fill in all fields");
             return;
         }
 
@@ -34,14 +35,14 @@ export default function Login() {
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem("token", data.token);
-                alert("Login successful");
+                toast.success("Login successful");
                 navigate("/");
             } else {
-                alert(data.message || "Login failed");
+                toast.error(data.message || "Login failed");
             }
         } catch (error) {
             console.log(error);
-            alert("An error occurred during login");
+            toast.error("An error occurred during login");
         } finally {
             setLoading(false);
         }
@@ -92,7 +93,6 @@ export default function Login() {
                     <button
                         type="submit"
                         className="login-button"
-                        onClick={handleLogin}
                         disabled={loading}
                     >
                         {loading ? "Logging in..." : "Log in"}

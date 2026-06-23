@@ -6,6 +6,7 @@ import { ScaleLoader } from "react-spinners";
 import "highlight.js/styles/github-dark.css";
 import { useNavigate } from 'react-router-dom';
 import { v1 as uuidv1 } from "uuid";
+import toast from "react-hot-toast";
 
 export default function ChatWindow({isSidebarOpen,setIsSidebarOpen}) {
   const { prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, setNewChat, setAllThreads, setCurrThreadId } = useContext(MyContext)
@@ -17,7 +18,7 @@ export default function ChatWindow({isSidebarOpen,setIsSidebarOpen}) {
   const getReply = async () => {
     const token = localStorage.getItem("token")
     if (!token) {
-      alert("Please login to continue")
+      toast.error("Please login to continue")
       navigate("/login")
       return;
     }
@@ -94,6 +95,7 @@ export default function ChatWindow({isSidebarOpen,setIsSidebarOpen}) {
                   localStorage.removeItem("token");
                   localStorage.removeItem("user");
                   resetChatState();
+                  toast.success("Logged out successfully");
                   navigate("/")
                 }}
               >

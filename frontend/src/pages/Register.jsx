@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
+import toast from "react-hot-toast";
 
 export default function Register() {
     const [username, setUsername] = useState("");
@@ -11,12 +12,12 @@ export default function Register() {
 
     async function handleRegister() {
         if (!username || !email || !password) {
-            alert("Please fill in all fields");
+            toast.error("Please fill in all fields")
             return;
         }
 
         if (password.length < 6) {
-            alert("Password should be at least 6 characters");
+            toast.error("Password should be at least 6 characters");
             return;
         }
 
@@ -39,14 +40,14 @@ export default function Register() {
 
             const data = await response.json();
             if (response.ok) {
-                alert("Registration successful! Please log in.");
+                toast.success("Registration successful! Please log in.");
                 navigate("/login");
             } else {
-                alert(data.message || "Registration failed");
+                toast.error(data.message || "Registration failed");
             }
         } catch (error) {
             console.log(error);
-            alert("An error occurred during registration");
+            toast.error("An error occurred during registration");
         } finally {
             setLoading(false);
         }
@@ -110,7 +111,6 @@ export default function Register() {
                     <button
                         type="submit"
                         className="register-button"
-                        onClick={handleRegister}
                         disabled={loading}
                     >
                         {loading ? "Creating account..." : "Sign up"}
