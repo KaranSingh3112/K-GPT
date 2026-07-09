@@ -37,5 +37,5 @@ const connectDB = async () => {
 connectDB();
 
 app.get("/", (req, res) => {
-    res.send("Your Backend Running... 😍");
+    res.send("Your Backend Runningggggggggggg... 😍");
 });
