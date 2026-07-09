@@ -20,20 +20,22 @@ app.use("/api", chatRoute)
 app.use("/api", authRoute)
 
 const port = process.env.PORT ||  8080;
-app.listen(port, () => {
-  console.log("App listens on port 8080");
-  connectDB();
-});
 
-const connectDB = async() => {
+const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI)
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Database Connected!");
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
   } catch (err) {
-    console.log("Failed to connect with database",err);
+    console.log("Failed to connect with database", err);
+    process.exit(1);
   }
-}
+};
+
+connectDB();
 
 app.get("/", (req, res) => {
-    res.send("K-GPT Backend Running");
+    res.send("Your Backend Running... 😍");
 });
