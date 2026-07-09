@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  backend: 
+    build: ./backend
+    container_name: kgpt-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./backend/.env
+    
+    restart: unless-stopped
+  
+  frontend:
+    build: ./frontend
+    container_name: kgpt-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
