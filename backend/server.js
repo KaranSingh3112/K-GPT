@@ -37,5 +37,5 @@ const connectDB = async () => {
 connectDB();
 
 app.get("/", (req, res) => {
-    res.send("Your Backend is started on server");
+    res.send("Congratulations, Your backend is running!!");
 });
