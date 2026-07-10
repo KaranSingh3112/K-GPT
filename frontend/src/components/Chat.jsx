@@ -27,7 +27,7 @@ export default function Chat() {
 
   return (
     <>
-      {newChat && <h1>Start a new chat!</h1>}
+      {newChat && <h1>Ready when you are.</h1>}
       <div className="chats">
 
         {
