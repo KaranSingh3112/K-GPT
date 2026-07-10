@@ -1,7 +1,7 @@
 import axios from "axios";
-console.log(import.meta.env.VITE_API_URL);
+
 const API = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: "http://ec2-13-61-12-149.eu-north-1.compute.amazonaws.com:8080/api",
     headers: {
         "Content-Type": "application/json"
     }
